@@ -48,7 +48,7 @@ URL: {{URL}}/api/trailer
 | Content-Type | application/json |  |
 
 
-***BQueryody:***
+***Query:***
 
 ```js        
 {
@@ -56,3 +56,21 @@ URL: {{URL}}/api/trailer
 }
 
 ```
+# Note
+Application written with serverless approach, with AWS lambda and api gateway. 
+
+# Future Work
+## How to handle heavy load
+
+1.) Best way to conatianerize the applicaiton and use kubernets or AWS fargate, Even the current approach can build the docker image(using lambda)
+You can package your Lambda function code and dependencies as a container image, using tools such as the Docker CLI. You can then upload the image to your container registry hosted on Amazon Elastic Container Registry (Amazon ECR).
+
+2.) As a improvements in future(production ready), we can cache all API requests. We can use Redis or fast caching Service.
+
+3.) If not supposed to use AWS lambda approach one can use the node cluster module or PM2
+
+## Security
+Can use some AWS services for the security,host the application proper cloud environment with load balancer for proper rate limiting and TLS termination
+
+## Improvements
+1.) Write more unit tests, also with the integration tests can verify the application flow.
