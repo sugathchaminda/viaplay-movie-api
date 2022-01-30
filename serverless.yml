@@ -1,0 +1,71 @@
+service: viaplay-serverless-movie-api
+
+package:
+  individually: true
+
+plugins:
+  - serverless-offline-ssm
+  - serverless-offline
+  - serverless-prune-plugin
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: local
+  region: eu-west-1
+  memorySize: 512
+  timeout: 120
+  lambdaHashingVersion: 20201221
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - 'lambda:InvokeFunction'
+            - 'lambda:InvokeAsync'
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+            - 'ec2:CreateNetworkInterface'
+            - 'ec2:DescribeNetworkInterfaces'
+            - 'ec2:DeleteNetworkInterface'
+            - 'ssm:*'
+            - 'alb:*'
+            - 'secretsmanager:*'
+          Resource: '*'
+
+  environment:
+    LAMBDA_STAGE: ${ssm:/${opt:stage, self:provider.stage}/lambda/common/LAMBDA_STAGE}
+    THE_MOVIE_API_KEY: ${ssm:/${opt:stage, self:provider.stage}/lambda/common/THE_MOVIE_API_KEY}
+    
+
+  logs:
+    httpApi: true
+
+  httpApi:
+    # cors:
+    #   origin: '*'
+    #   allowCredentials: true
+
+functions:
+  routes:
+    handler: src/handler.run
+    description: Routing event to correct internal function
+    timeout: 28 # Timeout just before API GW to avoid success Lambda but time-out from GW
+    events:
+      - httpApi:
+          method: '*'
+          path: '/{proxy+}'
+custom:
+  prune:
+    automatic: true
+    number: 10
+  serverless-offline:
+    httpPort: 3001
+  serverless-offline-ssm:
+    stages:
+      - local
+    ssm:
+      '/local/lambda/common/LAMBDA_STAGE': '${opt:stage, self:provider.stage}'
+      '/local/lambda/common/THE_MOVIE_API_KEY': fa206950a04d3d1026af79316e6a514a
