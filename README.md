@@ -20,3 +20,39 @@ To get the project running locally you should do the following:
 
 Unit tests do not require the local env to be running, as oposed to integration tests. To run the tests run `npm test`
 
+# API Documentation
+
+## Indices
+* [Movie](#post)
+  * [Get movie info](#1-get-movie-info)
+
+--------
+
+## Movie
+### 1. Get movie info - (Local running endpoint - localhost:3001/api/trailer?url=https://content.viaplay.se/pc-se/film/arrival-2016)
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: RAW
+URL: {{URL}}/api/trailer
+```
+
+
+***Headers:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| Content-Type | application/json |  |
+
+
+***BQueryody:***
+
+```js        
+{
+	"url": "https://content.viaplay.se/pc-se/film/arrival-2016"
+}
+
+```
